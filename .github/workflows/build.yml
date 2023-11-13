@@ -61,6 +61,11 @@ jobs:
           ref: refs/tags/${{steps.fetch_release.outputs.tag_name}}
           # token: ${{ secrets.my_pat }}
 
+      - name: Change arm64
+        id: set_arm64
+        run: |
+          sed -i 's|GOARCH=amd64|GOARCH=arm64|g' build.sh
+
       # - name: Pull code
       #   if: steps.should_push.outputs.push=='true'
       #   run: |
