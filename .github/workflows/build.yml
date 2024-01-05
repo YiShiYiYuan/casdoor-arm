@@ -4,7 +4,7 @@
 name: Build
 
 on:
-  push:
+  # push:
   
   schedule:
     - cron:  '13 22 * * *'
@@ -107,6 +107,7 @@ jobs:
 
       - name: Create tag
         uses: actions/github-script@v6
+        if: steps.should_push.outputs.push=='true'
         with:
           # github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
