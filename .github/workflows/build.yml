@@ -102,8 +102,8 @@ jobs:
           push: true
           tags: "wbchn/casdoor-arm64:${{ env.tag_name }},\
 wbchn/casdoor-arm64:latest,\
-ghcr.io/${{ github.repository_owner }}/casdoor-arm64:${{ env.tag_name }},\
-ghcr.io/${{ github.repository_owner }}/casdoor-arm64:latest"
+ghcr.io/yishiyiyuan/casdoor-arm64:${{ env.tag_name }},\
+ghcr.io/yishiyiyuan/casdoor-arm64:latest"
 
       # - name: Create tag
       #   if: env.should_push == 'true'
