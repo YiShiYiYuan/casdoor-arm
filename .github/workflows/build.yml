@@ -28,7 +28,7 @@ jobs:
           releasenote="$(echo ${last_release} | jq -r '.body')"
           echo "tag_name=${tag_name}" >> $GITHUB_ENV
           echo "tarball=${tarball}" >> $GITHUB_ENV
-          echo "releasenote=${releasenote}" >> $GITHUB_ENV
+          echo "releasenote=`echo ${releasenote}`" >> $GITHUB_ENV
 
       - name: Fetch Previous version
         id: get-previous-tag
@@ -82,6 +82,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Push to Docker Hub
         if: env.should_push == 'true'
         uses: docker/build-push-action@v5
@@ -90,7 +97,10 @@ jobs:
           target: STANDARD
           platforms: linux/arm64
           push: true
-          tags: wbchn/casdoor-arm64:${{ env.tag_name }},wbchn/casdoor-arm64:latest
+          tags: "wbchn/casdoor-arm64:${{ env.tag_name }},\
+wbchn/casdoor-arm64:latest,\
+ghcr.io/${{ github.repository_owner }}/casdoor-arm64:${{ env.tag_name }},\
+ghcr.io/${{ github.repository_owner }}/casdoor-arm64:latest"
 
       # - name: Create tag
       #   if: env.should_push == 'true'
