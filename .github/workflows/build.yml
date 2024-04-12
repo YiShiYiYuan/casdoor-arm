@@ -22,7 +22,7 @@ jobs:
       - name: Fetch last release
         id: fetch_release
         run: |
-          last_release="$(curl -sSL https://api.github.com/repos/casdoor/casdoor/releases | jq -r '.[0] | {tag_name, published_at, tarball_url}')"
+          last_release="$(curl -sSL https://api.github.com/repos/casdoor/casdoor/releases | jq -r '.[0] | {tag_name, published_at, tarball_url, body}')"
           tag_name="$(echo ${last_release} | jq -r '.tag_name')"
           tarball="$(echo ${last_release} | jq -r '.tarball_url')"
           releasenote="$(echo ${last_release} | jq -r '.body')"
@@ -56,7 +56,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: casdoor/casdoor
-          fetch-depth: 1  # Fetches only the last commit
+          fetch-depth: -1  # casdoor build need read version from git info.
           ref: refs/tags/${{ env.tag_name }}
 
       - name: Change arm64
@@ -115,6 +115,7 @@ jobs:
           release_name: Release ${{ env.tag_name }}
           body: |
             ${{ env.releasenote }}
+            
             Download code from [here](${{ env.tarball }})
           draft: false
           prerelease: false
